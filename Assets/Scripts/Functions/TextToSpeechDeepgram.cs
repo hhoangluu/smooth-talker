@@ -6,7 +6,7 @@ using System.Text;
 public class TextToSpeechDeepgram : MonoBehaviour
 {
     public static TextToSpeechDeepgram Instance;
-    public string modelName = "aura-2-asteria-en";
+    public string modelName = "aura-2-odysseus-en";
     private void Awake()
     {
         if (Instance == null)
