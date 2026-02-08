@@ -8,13 +8,43 @@ using ConversionSystem.Data;
 
 namespace ConversionSystem.Services
 {
-    public class AIService
+    public class AIService : MonoBehaviour
     {
-        private readonly AIServiceConfig _config;
+        public static AIService Instance { get; private set; }
 
-        public AIService(AIServiceConfig config)
+        [Header("AI Provider")]
+        public AIProvider SelectedProvider = AIProvider.Gemini;
+        public AIServiceConfig GeminiConfig;
+        public AIServiceConfig ChatGPTConfig;
+        public AIServiceConfig MistralConfig;
+
+        [Header("Personality")]
+        public PersonalityConfig Personality;
+
+        [Header("Player")]
+        public PlayerType CurrentPlayerType = PlayerType.Default;
+
+        [Header("Game Settings")]
+        public int MaxTurns = 3;
+
+        private AIServiceConfig _config;
+
+        private void Awake()
         {
-            _config = config;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+
+            _config = SelectedProvider switch
+            {
+                AIProvider.Gemini => GeminiConfig,
+                AIProvider.ChatGPT => ChatGPTConfig,
+                AIProvider.Mistral => MistralConfig,
+                _ => GeminiConfig
+            };
         }
 
         public async Task<AIResponseData> SendRequestAsync(AIRequestData request)
@@ -42,6 +72,32 @@ namespace ConversionSystem.Services
 
             return ParseResponse(webRequest.downloadHandler.text);
         }
+
+        public async Task<string> TranscribeAudioAsync(byte[] audioBytes)
+        {
+            WWWForm form = new WWWForm();
+            form.AddBinaryData("file", audioBytes, "user_speech.wav", "audio/wav");
+            form.AddField("model", "voxtral-mini-2602");
+            form.AddField("language", "en");
+
+            using var webRequest = UnityWebRequest.Post("https://api.mistral.ai/v1/audio/transcriptions", form);
+            webRequest.SetRequestHeader("Authorization", $"Bearer {MistralConfig.ApiKey}");
+
+            var operation = webRequest.SendWebRequest();
+            while (!operation.isDone)
+                await Task.Yield();
+
+            if (webRequest.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError($"Transcription Error: {webRequest.error}");
+                return null;
+            }
+
+            var response = JsonUtility.FromJson<TranscriptionResponse>(webRequest.downloadHandler.text);
+            return response.text;
+        }
+
+        #region Private Methods
 
         private string GetApiUrl()
         {
@@ -179,7 +235,7 @@ namespace ConversionSystem.Services
                 {
                     AIProvider.Gemini => ParseGeminiResponse(json),
                     AIProvider.ChatGPT => ParseChatGPTResponse(json),
-                    AIProvider.Mistral => ParseChatGPTResponse(json), // Same format as ChatGPT
+                    AIProvider.Mistral => ParseChatGPTResponse(json),
                     _ => throw new NotSupportedException($"Provider {_config.Provider} not supported")
                 };
 
@@ -204,18 +260,20 @@ namespace ConversionSystem.Services
             return wrapper.choices[0].message.content;
         }
 
+        #endregion
+
         #region Response Classes
 
-        // Gemini
         [Serializable] private class GeminiResponse { public GeminiCandidate[] candidates; }
         [Serializable] private class GeminiCandidate { public GeminiContent content; }
         [Serializable] private class GeminiContent { public GeminiPart[] parts; }
         [Serializable] private class GeminiPart { public string text; }
 
-        // ChatGPT
         [Serializable] private class ChatGPTResponse { public ChatGPTChoice[] choices; }
         [Serializable] private class ChatGPTChoice { public ChatGPTMessage message; }
         [Serializable] private class ChatGPTMessage { public string content; }
+
+        [Serializable] private class TranscriptionResponse { public string text; }
 
         #endregion
     }
