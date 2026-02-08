@@ -19,6 +19,9 @@ namespace ConversionSystem.Example
         public Button SubmitButton;
         public Image PlayerAvatar;
 
+        [Header("UI - Loading")]
+        public GameObject LoadingPanel;
+
         [Header("Settings")]
         public bool EnableTTS = true;
 
@@ -35,6 +38,13 @@ namespace ConversionSystem.Example
         private void OnDisable()
         {
             SubmitButton.onClick.RemoveListener(OnSubmitClicked);
+        }
+
+        private void SetLoading(bool loading)
+        {
+            if (LoadingPanel != null) LoadingPanel.SetActive(loading);
+            SubmitButton.interactable = !loading;
+            PlayerInputField.interactable = !loading;
         }
 
         private void ShowNPCPanel()
@@ -70,8 +80,13 @@ namespace ConversionSystem.Example
             byte[] wavData = VoiceInput.Instance?.StopRecording();
             if (wavData == null) return;
 
+            SetLoading(true);
             string text = await AIService.Instance.TranscribeAudioAsync(wavData);
-            if (string.IsNullOrEmpty(text)) return;
+            if (string.IsNullOrEmpty(text))
+            {
+                SetLoading(false);
+                return;
+            }
 
             PlayerInputField.text = text;
             OnPlayerInput(text);
@@ -99,7 +114,7 @@ namespace ConversionSystem.Example
         private async System.Threading.Tasks.Task DisplayDialogue(string text)
         {
             if (EnableTTS && TextToSpeechDeepgram.Instance != null)
-                await TextToSpeechDeepgram.Instance.SpeakAsync(text, GameManager.Instance.CurrentNPC.VoiceModel);
+                await TextToSpeechDeepgram.Instance?.SpeakAsync(text, GameManager.Instance.CurrentNPC.VoiceModel);
 
             DialogueText.text = text;
             ShowNPCPanel();
@@ -128,6 +143,7 @@ namespace ConversionSystem.Example
         {
             if (_roundEnded) return;
 
+            SetLoading(true);
             var ai = AIService.Instance;
             var request = new AIRequestData
             {
@@ -148,8 +164,11 @@ namespace ConversionSystem.Example
             if (response == null)
             {
                 Debug.LogError("Failed to get AI response");
+                SetLoading(false);
                 return;
             }
+
+
 
             _history.Add(new DialogueEntry("Player", playerInput));
             _history.Add(new DialogueEntry("Cop", response.Dialogue));
@@ -165,7 +184,7 @@ namespace ConversionSystem.Example
             }
 
             await DisplayDialogue(response.Dialogue);
-
+            SetLoading(false);
             _currentTurn++;
         }
     }
