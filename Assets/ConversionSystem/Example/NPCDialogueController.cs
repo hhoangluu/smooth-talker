@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using ConversionSystem.Config;
+using ConversionSystem.Core;
 using ConversionSystem.Data;
 using ConversionSystem.Services;
 
@@ -38,13 +39,12 @@ namespace ConversionSystem.Example
         private AIService _aiService;
         private List<DialogueEntry> _history;
         private int _currentTurn;
-        private bool _gameEnded;
+        private bool _roundEnded;
 
         private void Start()
         {
             var config = GetSelectedConfig();
             _aiService = new AIService(config);
-            StartGame();
         }
 
         private AIServiceConfig GetSelectedConfig()
@@ -84,9 +84,15 @@ namespace ConversionSystem.Example
             PlayerInputField.ActivateInputField();
         }
 
+        public void HidePanels()
+        {
+            NPCPanel.SetActive(false);
+            PlayerPanel.SetActive(false);
+        }
+
         private void OnContinueClicked()
         {
-            if (!_gameEnded)
+            if (!_roundEnded)
                 ShowPlayerPanel();
         }
 
@@ -97,11 +103,11 @@ namespace ConversionSystem.Example
             PlayerInputField.text = "";
         }
 
-        public void StartGame()
+        public void StartNewRound()
         {
             _history = new List<DialogueEntry>();
             _currentTurn = 1;
-            _gameEnded = false;
+            _roundEnded = false;
 
             DisplayDialogue(Personality.OpeningDialogue);
         }
@@ -110,7 +116,6 @@ namespace ConversionSystem.Example
         {
             DialogueText.text = text;
             ShowNPCPanel();
-            Debug.Log($"Cop: {text}");
         }
 
         private string GetSpecificBehavior(PlayerType playerType)
@@ -125,7 +130,7 @@ namespace ConversionSystem.Example
 
         public async void OnPlayerInput(string playerInput)
         {
-            if (_gameEnded) return;
+            if (_roundEnded) return;
 
             var request = new AIRequestData
             {
@@ -154,14 +159,12 @@ namespace ConversionSystem.Example
             _history.Add(new DialogueEntry("Cop", response.Dialogue));
             Debug.Log($"(Debug - Score: {response.LeniencyScore} | Decision: {response.Decision})");
 
-            // Check game end
+            // Check round end
             if (_currentTurn >= MaxTurns || response.IsFinalDecision)
             {
-                _gameEnded = true;
-                string result = response.IsPlayerPardoned
-                    ? "YOU GOT OFF WITH A WARNING! (Mission Passed)"
-                    : "YOU GOT A TICKET! (Wasted)";
-                DisplayDialogue($"{response.Dialogue}\n\n{result}");
+                _roundEnded = true;
+                DisplayDialogue(response.Dialogue);
+                GameManager.Instance.OnRoundResult(response.Decision);
                 return;
             }
 
