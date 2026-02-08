@@ -102,7 +102,7 @@ namespace ConversionSystem.Example
         private async System.Threading.Tasks.Task DisplayDialogue(string text)
         {
             if (EnableTTS && TextToSpeechDeepgram.Instance != null)
-                await TextToSpeechDeepgram.Instance.SpeakAsync(text);
+                await TextToSpeechDeepgram.Instance?.SpeakAsync(text);
 
             DialogueText.text = text;
             ShowNPCPanel();

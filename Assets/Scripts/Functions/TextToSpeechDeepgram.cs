@@ -1,7 +1,8 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Text;
+using System.Threading.Tasks;
 
 public class TextToSpeechDeepgram : MonoBehaviour
 {
@@ -23,55 +24,49 @@ public class TextToSpeechDeepgram : MonoBehaviour
 
     public AudioSource audioSource;
 
-    public void Speak(string text)
+
+    public async Task SpeakAsync(string text)
     {
         if (string.IsNullOrEmpty(text)) return;
-        StartCoroutine(GetSpeech(text));
-    }
 
-    IEnumerator GetSpeech(string text)
-{
-    // 1. Cấu hình Model và URL
-    // Lưu ý: Dùng aura-asteria-en (v1) để ổn định nhất, hoặc aura-2-asteria-en nếu bạn muốn v2
-    string url = $"https://api.deepgram.com/v1/speak?model={modelName}&encoding=linear16&container=wav";
-
-    // 2. Tạo Body theo đúng định dạng JSON
-    string jsonPayload = "{\"text\":\"" + text.Replace("\"", "\\\"") + "\"}";
-    byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
-
-    using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
-    {
-        // Gán dữ liệu thô
-        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-        www.downloadHandler = new DownloadHandlerAudioClip(url, AudioType.WAV);
+        // Định dạng chuẩn để lấy file WAV
+        string url = $"https://api.deepgram.com/v1/speak?model={modelName}&encoding=linear16&container=wav";
         
-        // Header BẮT BUỘC
-        www.SetRequestHeader("Authorization", "Token " + apiKey);
-        www.SetRequestHeader("Content-Type", "application/json");
+        string jsonPayload = "{\"text\":\"" + text.Replace("\"", "\\\"") + "\"}";
+        byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
 
-        yield return www.SendWebRequest();
+        using (UnityWebRequest www = new UnityWebRequest(url, "POST"))
+        {
+            www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+            www.downloadHandler = new DownloadHandlerAudioClip(url, AudioType.WAV);
 
-        if (www.result != UnityWebRequest.Result.Success)
-        {
-            // Nếu lỗi 400, chúng ta cần đọc nội dung lỗi từ Buffer
-            // Vì DownloadHandlerAudioClip không cho đọc text, ta nên dùng trick sau để debug:
-            Debug.LogError($"Deepgram Error: {www.responseCode} | Msg: {www.error}");
-            
-            // Nếu muốn xem lỗi chi tiết từ Deepgram (như sai field nào):
-            // Hãy tạm thời đổi downloadHandler thành DownloadHandlerBuffer để thấy JSON lỗi
-        }
-        else
-        {
-            AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
-            if (clip != null)
+            www.SetRequestHeader("Authorization", "Token " + apiKey);
+            www.SetRequestHeader("Content-Type", "application/json");
+
+            // THAY ĐỔI QUAN TRỌNG: Dùng Async Operation thay vì yield
+            var operation = www.SendWebRequest();
+
+            // Chờ cho đến khi request xong mà không block thread chính
+            while (!operation.isDone)
+                await Task.Yield(); 
+
+            if (www.result != UnityWebRequest.Result.Success)
             {
-                audioSource.clip = clip;
-                audioSource.Play();
-                Debug.Log("TTS Success!");
+                Debug.LogError($"Deepgram Error: {www.responseCode} | Msg: {www.error}");
+                // Nếu lỗi 400 về format, hãy thử bỏ "&container=wav" trong URL
+            }
+            else
+            {
+                AudioClip clip = DownloadHandlerAudioClip.GetContent(www);
+                if (clip != null)
+                {
+                    audioSource.clip = clip;
+                    audioSource.Play();
+                    Debug.Log("TTS Success!");
+                }
             }
         }
     }
-}
 
     [System.Serializable]
     private class TTSPayload

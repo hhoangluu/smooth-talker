@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25e1c91c5be908149af75414f827a6ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TextToSpeechDeepgram
-  modelName: aura-2-asteria-en
+  modelName: aura-2-odysseus-en
   audioSource: {fileID: 6113405360481800964}
 --- !u!82 &6113405360481800964
 AudioSource:
