@@ -33,8 +33,7 @@ public class TextToSpeechDeepgram : MonoBehaviour
 {
     // 1. Cấu hình Model và URL
     // Lưu ý: Dùng aura-asteria-en (v1) để ổn định nhất, hoặc aura-2-asteria-en nếu bạn muốn v2
-    string model = "aura-asteria-en"; 
-    string url = $"https://api.deepgram.com/v1/speak?model={model}&encoding=linear16&container=wav";
+    string url = $"https://api.deepgram.com/v1/speak?model={modelName}&encoding=linear16&container=wav";
 
     // 2. Tạo Body theo đúng định dạng JSON
     string jsonPayload = "{\"text\":\"" + text.Replace("\"", "\\\"") + "\"}";
