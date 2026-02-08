@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Default
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Config.CharacterProfile
   CharacterId: Default
-  Avatar: {fileID: 0}
+  Avatar: {fileID: -281155209, guid: 276e8c419a2a446ddb0154f2e1fcc818, type: 3}
+  PlayerType: 0

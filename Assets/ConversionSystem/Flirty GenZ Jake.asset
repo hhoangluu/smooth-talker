@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Flirty GenZ Jake
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Config.PersonalityConfig
   PersonalityId: Flirty GenZ Jake
-  Avatar: {fileID: 21300000, guid: 70e397a109dfd43d29f99122d6da92ff, type: 3}
+  Avatar: {fileID: -891590290, guid: 70ff33fd8e19742e0bcb14ae0d67d4b7, type: 3}
   VoiceModel: aura-2-atlas-en
   PersonalityPrompt: 'Archetype: Gen-Z cop who''s terminally online, chronically
     flirty, and has the attention span of a goldfish
@@ -80,7 +80,9 @@ MonoBehaviour:
 
     PLOT TWIST: Suddenly VERY
     interested, asks invasive questions, forgets about ticket entirely'
-  OpeningDialogue: Wow wow wow
+  OpeningDialogue: "Hello. You were going over the limit back there, so I needed
+    to pull you over.\nBe honest with me\u2026 was that a real emergency, or just
+    strong vibes?"
   RaiseSuspicionTriggers: 'Not understanding his slang
 
     Being a "boomer" (anyone

@@ -28,7 +28,7 @@ public class CameraController : MonoBehaviour
         // Nếu đang di chuyển dở mà bấm lần nữa thì dừng cái cũ để chạy cái mới
         if (activeTransition != null) StopCoroutine(activeTransition);
         
-        activeTransition = StartCoroutine(MoveToTarget(targetPosition, targetRotation));
+      //  activeTransition = StartCoroutine(MoveToTarget(targetPosition, targetRotation));
     }
 
     private IEnumerator MoveToTarget(Vector3 destination, Quaternion destRotation)

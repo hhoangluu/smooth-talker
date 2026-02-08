@@ -43,6 +43,8 @@ namespace ConversionSystem.Core
         private int _score;
         private bool _isTransitioning;
         private string _currentScene;
+        private int _npcIndex;
+        private int _characterIndex;
 
         private void Awake()
         {
@@ -64,17 +66,19 @@ namespace ConversionSystem.Core
         {
             _money = StartingMoney;
             _score = 0;
+            _characterIndex = 0;
+            _npcIndex = 0;
             OnStatsChanged?.Invoke(_money, _score);
             OnGameStarted?.Invoke();
 
             if (MainEnvironment != null) MainEnvironment.SetActive(false);
-            RandomizeProfiles();
+            AdvanceProfiles();
             TransitionToScene("CutScene");
         }
 
         public void OnRoundResult(DecisionType decision)
         {
-            RandomizeProfiles();
+            AdvanceProfiles();
 
             if (decision == DecisionType.Warning)
             {
@@ -102,13 +106,20 @@ namespace ConversionSystem.Core
             }
         }
 
-        public void RandomizeProfiles()
+        public void AdvanceProfiles()
         {
-            if (NPCProfiles != null && NPCProfiles.Length > 0)
-                CurrentNPC = NPCProfiles[UnityEngine.Random.Range(0, NPCProfiles.Length)];
+            if (NPCProfiles == null || NPCProfiles.Length == 0) return;
+            if (CharacterProfiles == null || CharacterProfiles.Length == 0) return;
 
-            if (CharacterProfiles != null && CharacterProfiles.Length > 0)
-                CurrentCharacter = CharacterProfiles[UnityEngine.Random.Range(0, CharacterProfiles.Length)];
+            CurrentCharacter = CharacterProfiles[_characterIndex];
+            CurrentNPC = NPCProfiles[_npcIndex];
+
+            _npcIndex++;
+            if (_npcIndex >= NPCProfiles.Length)
+            {
+                _npcIndex = 0;
+                _characterIndex = (_characterIndex + 1) % CharacterProfiles.Length;
+            }
         }
         IEnumerator WaitAndRestart()
         {

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: HotGirl
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Config.CharacterProfile
   CharacterId: Hot girl
-  Avatar: {fileID: 0}
+  Avatar: {fileID: -1639171588, guid: 1e4cde9e8cd0c484ea630f03465c3ecc, type: 3}
   PlayerType: 1

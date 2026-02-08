@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Conspiracy Carl
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Config.PersonalityConfig
   PersonalityId: Conspiracy Carl
-  Avatar: {fileID: 21300000, guid: f8c2d42e6bebf4621b08679f194d7808, type: 3}
+  Avatar: {fileID: 468058594, guid: 553006ecd4eb44a9f9f2267a3cf4b6ad, type: 3}
   VoiceModel: aura-2-arcas-en
   PersonalityPrompt: 'The cop who thinks EVERYTHING is a conspiracy. Believes traffic
     laws are government mind control
@@ -31,7 +31,8 @@ MonoBehaviour:
   DefaultBehavior: 
   HotGirlBehavior: 
   GrandMaBehavior: 
-  OpeningDialogue: Wow wow wow
+  OpeningDialogue: "Hello. You were driving over the limit back there. Before we
+    get into details\u2026 did today start normal, strange or crazy for you?"
   RaiseSuspicionTriggers: 'Mentioning the government positively
 
     "I was following

@@ -7344,6 +7344,7 @@ MonoBehaviour:
   CharacterProfiles:
   - {fileID: 11400000, guid: a33346c9552804f3e8ebc161493f5aa9, type: 2}
   - {fileID: 11400000, guid: 9271ab9fb8da74ebda09dc446eeca74f, type: 2}
+  - {fileID: 11400000, guid: 368deaac83f5b4cc4849be71416515ea, type: 2}
   CurrentNPC: {fileID: 0}
   CurrentCharacter: {fileID: 0}
   StartingMoney: 2000
