@@ -138,7 +138,17 @@ namespace ConversionSystem.Core
         {
             _money = StartingMoney;
             _score = 0;
+            _characterIndex = 0;
+            _npcIndex = 0;
             OnStatsChanged?.Invoke(_money, _score);
+
+            if (!string.IsNullOrEmpty(_currentScene))
+            {
+                SceneManager.UnloadSceneAsync(_currentScene);
+                _currentScene = null;
+            }
+
+            if (MainEnvironment != null) MainEnvironment.SetActive(true);
         }
 
         public void TransitionToScene(string sceneName, Action onSceneLoaded = null)

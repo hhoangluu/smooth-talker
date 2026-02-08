@@ -80,8 +80,10 @@ namespace ConversionSystem.Core
 
         private void HandleGameOver()
         {
-            GameOverPanel.SetActive(true);
-            GameOverScoreText.text = $"Final Score: {GameManager.Instance.Score}";
+            // GameOverPanel.SetActive(true);
+            // GameOverScoreText.text = $"Final Score: {GameManager.Instance.Score}";
+            GameManager.Instance.RestartGame();
+            ShowStartScreen();
         }
 
         private void OnRestartClicked()

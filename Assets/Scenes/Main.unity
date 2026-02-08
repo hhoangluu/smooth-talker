@@ -7344,7 +7344,6 @@ MonoBehaviour:
   CurrentCharacter: {fileID: 0}
   StartingMoney: 2000
   TicketPenalty: 1000
-  WarningBonus: 0
   MainEnvironment: {fileID: 1803295742}
   FadeImage: {fileID: 1956694381}
   FadeDuration: 1
@@ -14176,6 +14175,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2799486301719096020, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 418.066
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799486301719096020, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 188.1297
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799486301719096020, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2799486301719096020, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4411020058872498468, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
       propertyPath: m_Name
       value: UI
@@ -14258,6 +14273,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4898991360109450721, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363713441715990566, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_Type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5363713441715990566, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 850302245, guid: 779fa26ea2f7c4c258549e9e2de3e17e, type: 3}
+    - target: {fileID: 5363713441715990566, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7007426140428408307, guid: 7b53b2747b49e45629abf6728126801d, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
