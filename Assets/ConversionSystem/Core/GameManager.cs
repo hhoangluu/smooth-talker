@@ -72,7 +72,7 @@ namespace ConversionSystem.Core
                 _score += WarningBonus;
                 OnStatsChanged?.Invoke(_money, _score);
                 OnRoundEnded?.Invoke("You got off with a WARNING!");
-                TransitionToScene("CutScene");
+                StartCoroutine(WaitAndRestart());
             }
             else
             {
@@ -83,14 +83,28 @@ namespace ConversionSystem.Core
                 if (_money <= 0)
                 {
                     OnRoundEnded?.Invoke($"TICKET! -${TicketPenalty}. You're broke!");
-                    OnGameOver?.Invoke();
+                    WaitAndOverGame();
                 }
                 else
                 {
                     OnRoundEnded?.Invoke($"TICKET! -${TicketPenalty}");
-                    TransitionToScene("CutScene");
+                    StartCoroutine(WaitAndRestart());
                 }
             }
+        }
+
+        IEnumerator WaitAndRestart()
+        {
+            CameraController.Instance?.CastReviewCamera();
+            yield return new WaitForSeconds(2f);
+            TransitionToScene("CutScene");
+        }
+
+        IEnumerator WaitAndOverGame()
+        {
+            CameraController.Instance?.CastReviewCamera();
+            yield return new WaitForSeconds(2f);
+            OnGameOver?.Invoke();
         }
 
         public void RestartGame()

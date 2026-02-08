@@ -4,6 +4,7 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public static CameraController Instance;
+    
     private Coroutine activeTransition;
 
     [Header("Settings")]
