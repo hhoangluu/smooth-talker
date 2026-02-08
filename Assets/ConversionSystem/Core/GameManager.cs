@@ -3,14 +3,21 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using ConversionSystem.Config;
 using ConversionSystem.Data;
-using ConversionSystem.Example;
 
 namespace ConversionSystem.Core
 {
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
+
+        [Header("Game Config")]
+        public PersonalityConfig[] NPCProfiles;
+        public CharacterProfile[] CharacterProfiles;
+
+        [HideInInspector] public PersonalityConfig CurrentNPC;
+        [HideInInspector] public CharacterProfile CurrentCharacter;
 
         [Header("Economy")]
         public int StartingMoney = 2000;
@@ -61,12 +68,14 @@ namespace ConversionSystem.Core
             OnGameStarted?.Invoke();
 
             if (MainEnvironment != null) MainEnvironment.SetActive(false);
-
+             RandomizeProfiles();
             TransitionToScene("CutScene");
         }
 
         public void OnRoundResult(DecisionType decision)
         {
+            RandomizeProfiles();
+
             if (decision == DecisionType.Warning)
             {
                 _score += WarningBonus;
@@ -91,6 +100,15 @@ namespace ConversionSystem.Core
                     TransitionToScene("CutScene");
                 }
             }
+        }
+
+        public void RandomizeProfiles()
+        {
+            if (NPCProfiles != null && NPCProfiles.Length > 0)
+                CurrentNPC = NPCProfiles[UnityEngine.Random.Range(0, NPCProfiles.Length)];
+
+            if (CharacterProfiles != null && CharacterProfiles.Length > 0)
+                CurrentCharacter = CharacterProfiles[UnityEngine.Random.Range(0, CharacterProfiles.Length)];
         }
 
         public void RestartGame()

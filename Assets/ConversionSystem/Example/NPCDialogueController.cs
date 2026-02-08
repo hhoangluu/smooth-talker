@@ -11,14 +11,13 @@ namespace ConversionSystem.Example
     public class NPCDialogueController : MonoBehaviour
     {
         [Header("UI - NPC Panel")]
-        public GameObject NPCPanel;
         public TMP_Text DialogueText;
-        public Button ContinueButton;
+        public Image NPCAvatar;
 
         [Header("UI - Player Panel")]
-        public GameObject PlayerPanel;
         public TMP_InputField PlayerInputField;
         public Button SubmitButton;
+        public Image PlayerAvatar;
 
         [Header("Settings")]
         public bool EnableTTS = true;
@@ -30,14 +29,12 @@ namespace ConversionSystem.Example
         private void OnEnable()
         {
             SubmitButton.onClick.AddListener(OnSubmitClicked);
-            ContinueButton.onClick.AddListener(OnContinueClicked);
             StartNewRound();
         }
 
         private void OnDisable()
         {
             SubmitButton.onClick.RemoveListener(OnSubmitClicked);
-            ContinueButton.onClick.RemoveListener(OnContinueClicked);
         }
 
         private void ShowNPCPanel()
@@ -54,17 +51,7 @@ namespace ConversionSystem.Example
             PlayerInputField.ActivateInputField();
         }
 
-        public void HidePanels()
-        {
-            NPCPanel.SetActive(false);
-            PlayerPanel.SetActive(false);
-        }
 
-        private void OnContinueClicked()
-        {
-            if (!_roundEnded)
-                ShowPlayerPanel();
-        }
 
         private void OnSubmitClicked()
         {
@@ -96,13 +83,23 @@ namespace ConversionSystem.Example
             _currentTurn = 1;
             _roundEnded = false;
 
-            await DisplayDialogue(AIService.Instance.Personality.OpeningDialogue);
+            var character = GameManager.Instance.CurrentCharacter;
+            var npc = GameManager.Instance.CurrentNPC;
+            Debug.Log($"You are: {character.CharacterId} ({character.PlayerType})");
+
+            if (NPCAvatar != null && npc.Avatar != null)
+                NPCAvatar.sprite = npc.Avatar;
+
+            if (PlayerAvatar != null && character.Avatar != null)
+                PlayerAvatar.sprite = character.Avatar;
+
+            await DisplayDialogue(npc.OpeningDialogue);
         }
 
         private async System.Threading.Tasks.Task DisplayDialogue(string text)
         {
             if (EnableTTS && TextToSpeechDeepgram.Instance != null)
-                await TextToSpeechDeepgram.Instance.SpeakAsync(text);
+                await TextToSpeechDeepgram.Instance.SpeakAsync(text, GameManager.Instance.CurrentNPC.VoiceModel);
 
             DialogueText.text = text;
             ShowNPCPanel();
@@ -118,7 +115,7 @@ namespace ConversionSystem.Example
 
         private string GetSpecificBehavior(PlayerType playerType)
         {
-            var personality = AIService.Instance.Personality;
+            var personality = GameManager.Instance.CurrentNPC;
             return playerType switch
             {
                 PlayerType.HotGirl => personality.HotGirlBehavior,
@@ -134,12 +131,12 @@ namespace ConversionSystem.Example
             var ai = AIService.Instance;
             var request = new AIRequestData
             {
-                PersonalityDescription = ai.Personality.PersonalityPrompt,
-                SpecificBehavior = GetSpecificBehavior(ai.CurrentPlayerType),
-                PlayerCharacter = ai.CurrentPlayerType.ToString(),
-                RaiseSuspicionTriggers = ai.Personality.RaiseSuspicionTriggers,
-                LowerSuspicionTriggers = ai.Personality.LowerSuspicionTriggers,
-                Catchphrases = string.Join("\n- ", ai.Personality.Catchphrases ?? new string[0]),
+                PersonalityDescription = GameManager.Instance.CurrentNPC.PersonalityPrompt,
+                SpecificBehavior = GetSpecificBehavior(GameManager.Instance.CurrentCharacter.PlayerType),
+                PlayerCharacter = GameManager.Instance.CurrentCharacter.PlayerType.ToString(),
+                RaiseSuspicionTriggers = GameManager.Instance.CurrentNPC.RaiseSuspicionTriggers,
+                LowerSuspicionTriggers = GameManager.Instance.CurrentNPC.LowerSuspicionTriggers,
+                Catchphrases = string.Join("\n- ", GameManager.Instance.CurrentNPC.Catchphrases ?? new string[0]),
                 CurrentTurn = _currentTurn,
                 MaxTurns = ai.MaxTurns,
                 PlayerInput = playerInput,
