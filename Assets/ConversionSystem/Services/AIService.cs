@@ -18,12 +18,6 @@ namespace ConversionSystem.Services
         public AIServiceConfig ChatGPTConfig;
         public AIServiceConfig MistralConfig;
 
-        [Header("Personality")]
-        public PersonalityConfig Personality;
-
-        [Header("Player")]
-        public PlayerType CurrentPlayerType = PlayerType.Default;
-
         [Header("Game Settings")]
         public int MaxTurns = 3;
 

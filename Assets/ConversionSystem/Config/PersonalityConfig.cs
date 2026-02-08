@@ -6,6 +6,8 @@ namespace ConversionSystem.Config
     public class PersonalityConfig : ScriptableObject
     {
         public string PersonalityId;
+        public Sprite Avatar;
+        public string VoiceModel = "aura-asteria-en";
 
         [TextArea(3, 6)]
         public string PersonalityPrompt;

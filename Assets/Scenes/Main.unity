@@ -7338,10 +7338,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f96f38f01ec7947789cfb5d60eb651df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Core.GameManager
-  DialogueController: {fileID: 0}
+  NPCProfiles:
+  - {fileID: 11400000, guid: 51aa97cc73b564ababb7920b4f7d6eb8, type: 2}
+  - {fileID: 11400000, guid: 311edfd0d970b41e5878836b575a1f9e, type: 2}
+  CharacterProfiles:
+  - {fileID: 11400000, guid: a33346c9552804f3e8ebc161493f5aa9, type: 2}
+  - {fileID: 11400000, guid: 9271ab9fb8da74ebda09dc446eeca74f, type: 2}
+  CurrentNPC: {fileID: 0}
+  CurrentCharacter: {fileID: 0}
   StartingMoney: 2000
-  TicketPenalty: 500
-  WarningBonus: 100
+  TicketPenalty: 1000
+  WarningBonus: 0
   MainEnvironment: {fileID: 1803295742}
   FadeImage: {fileID: 1956694381}
   FadeDuration: 1
@@ -8795,12 +8802,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456637195}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.06162845, y: -0.70441604, z: 0.06162845, w: 0.70441604}
+  m_LocalPosition: {x: 5.76, y: -4.14532, z: -4.4477444}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1803295743}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1457467072
 PrefabInstance:
@@ -11649,6 +11656,7 @@ Transform:
   - {fileID: 765267838}
   - {fileID: 1757401076}
   - {fileID: 160953494}
+  - {fileID: 1456637198}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1807870770
@@ -14349,6 +14357,5 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1919794373143219484}
-  - {fileID: 1456637198}
   - {fileID: 1201906237}
   - {fileID: 1803295743}

@@ -24,14 +24,13 @@ public class TextToSpeechDeepgram : MonoBehaviour
 
     public AudioSource audioSource;
 
-
-    public async Task SpeakAsync(string text)
+    public async Task SpeakAsync(string text, string voiceModel = "aura-asteria-en")
     {
         if (string.IsNullOrEmpty(text)) return;
 
-        // Định dạng chuẩn để lấy file WAV
-        string url = $"https://api.deepgram.com/v1/speak?model={modelName}&encoding=linear16&container=wav";
-        
+        string model = voiceModel;
+        string url = $"https://api.deepgram.com/v1/speak?model={model}&encoding=linear16&container=wav";
+
         string jsonPayload = "{\"text\":\"" + text.Replace("\"", "\\\"") + "\"}";
         byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonPayload);
 

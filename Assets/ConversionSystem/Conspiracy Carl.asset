@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Conspiracy Carl
   m_EditorClassIdentifier: Assembly-CSharp::ConversionSystem.Config.PersonalityConfig
   PersonalityId: Conspiracy Carl
+  Avatar: {fileID: 21300000, guid: f8c2d42e6bebf4621b08679f194d7808, type: 3}
+  VoiceModel: aura-2-arcas-en
   PersonalityPrompt: 'The cop who thinks EVERYTHING is a conspiracy. Believes traffic
     laws are government mind control
 
@@ -26,6 +28,9 @@ MonoBehaviour:
 
     Has a "truth
     seeking" podcast he keeps promoting'
+  DefaultBehavior: 
+  HotGirlBehavior: 
+  GrandMaBehavior: 
   OpeningDialogue: Wow wow wow
   RaiseSuspicionTriggers: 'Mentioning the government positively
 
