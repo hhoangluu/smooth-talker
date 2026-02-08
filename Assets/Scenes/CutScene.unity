@@ -8133,8 +8133,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85d9e80a729594bc99378bc9ae7c9170, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  Timeline: {fileID: 0}
-  DelayAfterTimeline: 2
+  Timeline: {fileID: 917826074}
+  DelayAfterTimeline: 0
   GamePlaySceneName: GamePlay
 --- !u!1001 &922743839
 PrefabInstance:
@@ -10057,6 +10057,7 @@ MonoBehaviour:
   StartingMoney: 2000
   TicketPenalty: 500
   WarningBonus: 100
+  MainEnvironment: {fileID: 0}
   FadeImage: {fileID: 0}
   FadeDuration: 0.5
 --- !u!4 &1201906237

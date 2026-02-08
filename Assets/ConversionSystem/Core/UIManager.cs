@@ -18,6 +18,9 @@ namespace ConversionSystem.Core
         [Header("Game Play Screen")]
         public GameObject GamePlayPanel;
 
+        [Header("Main UI")]
+        public GameObject MainUI;
+
         [Header("HUD")]
         public TMP_Text MoneyText;
         public TMP_Text ScoreText;
@@ -62,6 +65,7 @@ namespace ConversionSystem.Core
 
         private void HandleGameStarted()
         {
+            if (MainUI != null) MainUI.SetActive(false);
             StartPanel.SetActive(false);
             GameOverPanel.SetActive(false);
             MoneyText.gameObject.SetActive(true);

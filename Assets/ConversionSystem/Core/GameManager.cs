@@ -12,13 +12,13 @@ namespace ConversionSystem.Core
     {
         public static GameManager Instance { get; private set; }
 
-        [Header("References")]
-        public NPCDialogueController DialogueController;
-
         [Header("Economy")]
         public int StartingMoney = 2000;
         public int TicketPenalty = 500;
         public int WarningBonus = 100;
+
+        [Header("Main Scene Objects")]
+        public GameObject MainEnvironment;
 
         [Header("Scene Transition")]
         public Image FadeImage;
@@ -35,6 +35,7 @@ namespace ConversionSystem.Core
         private int _money;
         private int _score;
         private bool _isTransitioning;
+        private string _currentScene;
 
         private void Awake()
         {
@@ -58,7 +59,9 @@ namespace ConversionSystem.Core
             _score = 0;
             OnStatsChanged?.Invoke(_money, _score);
             OnGameStarted?.Invoke();
-            DialogueController.StartNewRound();
+
+            if (MainEnvironment != null) MainEnvironment.SetActive(false);
+
             TransitionToScene("CutScene");
         }
 
@@ -69,7 +72,7 @@ namespace ConversionSystem.Core
                 _score += WarningBonus;
                 OnStatsChanged?.Invoke(_money, _score);
                 OnRoundEnded?.Invoke("You got off with a WARNING!");
-                DialogueController.StartNewRound();
+                TransitionToScene("CutScene");
             }
             else
             {
@@ -85,7 +88,7 @@ namespace ConversionSystem.Core
                 else
                 {
                     OnRoundEnded?.Invoke($"TICKET! -${TicketPenalty}");
-                    DialogueController.StartNewRound();
+                    TransitionToScene("CutScene");
                 }
             }
         }
@@ -100,16 +103,25 @@ namespace ConversionSystem.Core
         public void TransitionToScene(string sceneName, Action onSceneLoaded = null)
         {
             if (_isTransitioning) return;
-            StartCoroutine(FadeAndLoadScene(sceneName, onSceneLoaded));
+            StartCoroutine(SwapScene(sceneName, onSceneLoaded));
         }
 
-        private IEnumerator FadeAndLoadScene(string sceneName, Action onSceneLoaded)
+        private IEnumerator SwapScene(string newScene, Action onSceneLoaded)
         {
             _isTransitioning = true;
+
             yield return StartCoroutine(Fade(0f, 1f));
-            yield return SceneManager.LoadSceneAsync(sceneName);
+
+            if (!string.IsNullOrEmpty(_currentScene))
+                yield return SceneManager.UnloadSceneAsync(_currentScene);
+
+            yield return SceneManager.LoadSceneAsync(newScene, LoadSceneMode.Additive);
+            _currentScene = newScene;
+
             onSceneLoaded?.Invoke();
+
             yield return StartCoroutine(Fade(1f, 0f));
+
             _isTransitioning = false;
         }
 
