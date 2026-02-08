@@ -131,6 +131,7 @@ namespace ConversionSystem.Example
             {
                 PersonalityDescription = Personality.PersonalityPrompt,
                 SpecificBehavior = GetSpecificBehavior(CurrentPlayerType),
+                PlayerCharacter = CurrentPlayerType.ToString(),
                 RaiseSuspicionTriggers = Personality.RaiseSuspicionTriggers,
                 LowerSuspicionTriggers = Personality.LowerSuspicionTriggers,
                 Catchphrases = string.Join("\n- ", Personality.Catchphrases ?? new string[0]),

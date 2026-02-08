@@ -84,6 +84,7 @@ namespace ConversionSystem.Services
             string prompt = _config.PromptTemplate
                 .Replace("{PersonalityDescription}", request.PersonalityDescription ?? "")
                 .Replace("{SpecificBehavior}", request.SpecificBehavior ?? "")
+                .Replace("{PlayerCharacter}", request.PlayerCharacter ?? "Default")
                 .Replace("{RaiseSuspicionTriggers}", request.RaiseSuspicionTriggers ?? "")
                 .Replace("{LowerSuspicionTriggers}", request.LowerSuspicionTriggers ?? "")
                 .Replace("{Catchphrases}", request.Catchphrases ?? "")

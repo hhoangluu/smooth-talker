@@ -18,6 +18,7 @@ namespace ConversionSystem.Data
     {
         public string PersonalityDescription;
         public string SpecificBehavior;
+        public string PlayerCharacter;
         public string RaiseSuspicionTriggers;
         public string LowerSuspicionTriggers;
         public string Catchphrases;
