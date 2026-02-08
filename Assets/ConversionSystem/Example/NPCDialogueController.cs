@@ -19,6 +19,9 @@ namespace ConversionSystem.Example
         [Header("Personality")]
         public PersonalityConfig Personality;
 
+        [Header("Player")]
+        public PlayerType CurrentPlayerType = PlayerType.Default;
+
         [Header("Game Settings")]
         public int MaxTurns = 3;
 
@@ -110,6 +113,16 @@ namespace ConversionSystem.Example
             Debug.Log($"Cop: {text}");
         }
 
+        private string GetSpecificBehavior(PlayerType playerType)
+        {
+            return playerType switch
+            {
+                PlayerType.HotGirl => Personality.HotGirlBehavior,
+                PlayerType.GrandMa => Personality.GrandMaBehavior,
+                _ => Personality.DefaultBehavior
+            };
+        }
+
         public async void OnPlayerInput(string playerInput)
         {
             if (_gameEnded) return;
@@ -117,6 +130,7 @@ namespace ConversionSystem.Example
             var request = new AIRequestData
             {
                 PersonalityDescription = Personality.PersonalityPrompt,
+                SpecificBehavior = GetSpecificBehavior(CurrentPlayerType),
                 RaiseSuspicionTriggers = Personality.RaiseSuspicionTriggers,
                 LowerSuspicionTriggers = Personality.LowerSuspicionTriggers,
                 Catchphrases = string.Join("\n- ", Personality.Catchphrases ?? new string[0]),

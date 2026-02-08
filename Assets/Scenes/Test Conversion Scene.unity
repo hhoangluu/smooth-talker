@@ -1392,7 +1392,8 @@ MonoBehaviour:
   GeminiConfig: {fileID: 11400000, guid: b8e9a19ef42214730997891a8e6100ad, type: 2}
   ChatGPTConfig: {fileID: 11400000, guid: c98a08c4bedde4134b88c56144dc2c08, type: 2}
   MistralConfig: {fileID: 11400000, guid: a5bd6f095829c41b3a735acca055ce34, type: 2}
-  Personality: {fileID: 11400000, guid: 51aa97cc73b564ababb7920b4f7d6eb8, type: 2}
+  Personality: {fileID: 11400000, guid: 311edfd0d970b41e5878836b575a1f9e, type: 2}
+  CurrentPlayerType: 1
   MaxTurns: 3
   NPCPanel: {fileID: 1107992640}
   DialogueText: {fileID: 841148189}

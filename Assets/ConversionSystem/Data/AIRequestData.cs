@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace ConversionSystem.Data
 {
+    public enum PlayerType
+    {
+        Default,
+        HotGirl,
+        GrandMa
+    }
+
     /// <summary>
     /// Request data to send to AI API
     /// </summary>
@@ -10,6 +17,7 @@ namespace ConversionSystem.Data
     public class AIRequestData
     {
         public string PersonalityDescription;
+        public string SpecificBehavior;
         public string RaiseSuspicionTriggers;
         public string LowerSuspicionTriggers;
         public string Catchphrases;

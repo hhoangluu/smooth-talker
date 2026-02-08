@@ -37,6 +37,45 @@ MonoBehaviour:
 
     Gets visibly
     bored with anyone over 40... unless they mention a hot relative'
+  DefaultBehavior: 'Normal levels of chaos
+
+    50/50 whether she''s into it
+
+    Depends
+    on player''s rizz'
+  HotGirlBehavior: 'Immediate bi panic
+
+    Forgets how to do his job
+
+    Keeps
+    "accidentally" touching his hair
+
+    Takes 47 selfies togethis
+
+    Suspicion
+    meter becomes USELESS (too distracted)
+
+    Asks for Instagram within 30 seconds
+
+    "Wait,
+    why was I even pulling you over? You''re literally so pretty I forgot"'
+  GrandMaBehavior: 'Visibly loses interest immediately
+
+    Checks phone constantly
+
+    Sighs
+    dramatically
+
+    "Okay but like, why are you even driving, respectfully"
+
+    Speeds
+    through traffic stop to get back to TikTok
+
+    UNLESS Grandma mentions hot granddaughter/grandson...
+
+    PLOT
+    TWIST: Suddenly VERY interested, asks invasive questions, forgets about ticket
+    entirely'
   OpeningDialogue: Wow wow wow
   RaiseSuspicionTriggers: 'Not understanding his slang
 

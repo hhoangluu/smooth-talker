@@ -10,6 +10,16 @@ namespace ConversionSystem.Config
         [TextArea(3, 6)]
         public string PersonalityPrompt;
 
+        [Header("Specific Behavior")]
+        [TextArea(3, 6)]
+        public string DefaultBehavior;
+
+        [TextArea(3, 6)]
+        public string HotGirlBehavior;
+
+        [TextArea(3, 6)]
+        public string GrandMaBehavior;
+
         [TextArea(2, 4)]
         public string OpeningDialogue;
 

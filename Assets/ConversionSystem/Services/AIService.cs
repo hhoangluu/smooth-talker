@@ -76,8 +76,14 @@ namespace ConversionSystem.Services
                 historyText.AppendLine(entry.ToString());
             }
 
-            return _config.PromptTemplate
+            bool isFinalTurn = request.CurrentTurn >= request.MaxTurns;
+            string finalTurnWarning = isFinalTurn
+                ? "\n\nIMPORTANT: This is the FINAL turn. You MUST make a final decision and end conversation now. Your decision MUST be either \"TICKET\" or \"WARNING\". Do NOT use \"PENDING\"."
+                : "";
+
+            string prompt = _config.PromptTemplate
                 .Replace("{PersonalityDescription}", request.PersonalityDescription ?? "")
+                .Replace("{SpecificBehavior}", request.SpecificBehavior ?? "")
                 .Replace("{RaiseSuspicionTriggers}", request.RaiseSuspicionTriggers ?? "")
                 .Replace("{LowerSuspicionTriggers}", request.LowerSuspicionTriggers ?? "")
                 .Replace("{Catchphrases}", request.Catchphrases ?? "")
@@ -85,6 +91,11 @@ namespace ConversionSystem.Services
                 .Replace("{MaxTurns}", request.MaxTurns.ToString())
                 .Replace("{History}", historyText.ToString())
                 .Replace("{PlayerInput}", request.PlayerInput ?? "");
+
+            if (isFinalTurn)
+                prompt += finalTurnWarning;
+
+            return prompt;
         }
 
         private string BuildRequestBody(string prompt)
