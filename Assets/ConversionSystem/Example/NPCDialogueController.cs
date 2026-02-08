@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,8 +23,13 @@ namespace ConversionSystem.Example
         [Header("UI - Loading")]
         public GameObject LoadingPanel;
 
+        [Header("Progress Bar")]
+        public Image ProgressBarFill;
+        public float BarAnimDuration = 0.5f;
+
         [Header("Settings")]
         public bool EnableTTS = true;
+        public TextToSpeechDeepgram TTS;
 
         private List<DialogueEntry> _history = new();
         private int _currentTurn;
@@ -97,6 +103,7 @@ namespace ConversionSystem.Example
             _history = new List<DialogueEntry>();
             _currentTurn = 1;
             _roundEnded = false;
+            UpdateProgressBar(50);
 
             var character = GameManager.Instance.CurrentCharacter;
             var npc = GameManager.Instance.CurrentNPC;
@@ -107,14 +114,20 @@ namespace ConversionSystem.Example
 
             if (PlayerAvatar != null && character.Avatar != null)
                 PlayerAvatar.sprite = character.Avatar;
+            DialogueText.text = npc.OpeningDialogue;
 
             await DisplayDialogue(npc.OpeningDialogue);
         }
 
         private async System.Threading.Tasks.Task DisplayDialogue(string text)
         {
-            if (EnableTTS && TextToSpeechDeepgram.Instance != null)
-                await TextToSpeechDeepgram.Instance?.SpeakAsync(text, GameManager.Instance.CurrentNPC.VoiceModel);
+            if (EnableTTS)
+            {
+                // while (TTS == null)
+                //     await System.Threading.Tasks.Task.Yield();
+
+                await TTS.SpeakAsync(text, GameManager.Instance.CurrentNPC.VoiceModel);
+            }
 
             DialogueText.text = text;
             ShowNPCPanel();
@@ -123,8 +136,8 @@ namespace ConversionSystem.Example
 
         private async System.Threading.Tasks.Task WaitForSpeechEnd()
         {
-            if (!EnableTTS || TextToSpeechDeepgram.Instance == null) return;
-            while (TextToSpeechDeepgram.Instance.audioSource.isPlaying)
+            if (!EnableTTS || TTS == null) return;
+            while (TTS.audioSource.isPlaying)
                 await System.Threading.Tasks.Task.Yield();
         }
 
@@ -173,6 +186,7 @@ namespace ConversionSystem.Example
             _history.Add(new DialogueEntry("Player", playerInput));
             _history.Add(new DialogueEntry("Cop", response.Dialogue));
             Debug.Log($"(Debug - Score: {response.LeniencyScore} | Decision: {response.Decision})");
+            UpdateProgressBar(response.LeniencyScore);
             if (_currentTurn >= ai.MaxTurns || response.IsFinalDecision)
             {
                 _roundEnded = true;
@@ -186,6 +200,47 @@ namespace ConversionSystem.Example
             await DisplayDialogue(response.Dialogue);
             SetLoading(false);
             _currentTurn++;
+        }
+
+        private Coroutine _barAnim;
+
+        private void UpdateProgressBar(int leniencyScore)
+        {
+            if (ProgressBarFill == null) return;
+
+            float targetFill = leniencyScore / 100f;
+
+            Color targetColor;
+            if (leniencyScore < 40)
+                targetColor = Color.red;
+            else if (leniencyScore < 60)
+                targetColor = Color.yellow;
+            else
+                targetColor = Color.green;
+
+            if (_barAnim != null) StopCoroutine(_barAnim);
+            _barAnim = StartCoroutine(AnimateProgressBar(targetFill, targetColor));
+        }
+
+        private IEnumerator AnimateProgressBar(float targetFill, Color targetColor)
+        {
+            float startFill = ProgressBarFill.fillAmount;
+            Color startColor = ProgressBarFill.color;
+            float elapsed = 0f;
+
+            while (elapsed < BarAnimDuration)
+            {
+                elapsed += Time.deltaTime;
+                float t = elapsed / BarAnimDuration;
+                t = t * t * (3f - 2f * t);
+
+                ProgressBarFill.fillAmount = Mathf.Lerp(startFill, targetFill, t);
+                ProgressBarFill.color = Color.Lerp(startColor, targetColor, t);
+                yield return null;
+            }
+
+            ProgressBarFill.fillAmount = targetFill;
+            ProgressBarFill.color = targetColor;
         }
     }
 }

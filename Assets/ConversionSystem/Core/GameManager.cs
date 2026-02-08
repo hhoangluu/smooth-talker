@@ -22,7 +22,6 @@ namespace ConversionSystem.Core
         [Header("Economy")]
         public int StartingMoney = 2000;
         public int TicketPenalty = 500;
-        public int WarningBonus = 100;
 
         [Header("Main Scene Objects")]
         public GameObject MainEnvironment;
@@ -80,10 +79,11 @@ namespace ConversionSystem.Core
         {
             AdvanceProfiles();
 
+            _score++;
+            OnStatsChanged?.Invoke(_money, _score);
+
             if (decision == DecisionType.Warning)
             {
-                _score += WarningBonus;
-                OnStatsChanged?.Invoke(_money, _score);
                 OnRoundEnded?.Invoke("You got off with a WARNING!");
                 StartCoroutine(WaitAndRestart());
             }
@@ -91,7 +91,6 @@ namespace ConversionSystem.Core
             {
                 _money -= TicketPenalty;
                 if (_money < 0) _money = 0;
-                OnStatsChanged?.Invoke(_money, _score);
 
                 if (_money <= 0)
                 {

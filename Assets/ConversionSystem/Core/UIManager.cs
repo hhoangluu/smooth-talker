@@ -75,7 +75,7 @@ namespace ConversionSystem.Core
         private void UpdateStats(int money, int score)
         {
             MoneyText.text = $"${money}";
-            ScoreText.text = $"Score: {score}";
+            ScoreText.text = $"PASSED: {score}";
         }
 
         private void HandleGameOver()
